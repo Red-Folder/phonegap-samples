@@ -4,10 +4,8 @@ A respository for my sample projects.  These will generally be projects to suppo
 
 ## Projects ##
 
-* TwitterExample - The final source for a Twitter example using the Background Service Plugin
-** http://red-folder.blogspot.com/2012/09/phonegap-service-tutorial-part-1.html
-** http://red-folder.blogspot.com/2012/09/phonegap-service-tutorial-part-2.html
-** http://red-folder.blogspot.com/2012/09/phonegap-service-tutorial-part-3.html
+* TwitterExample - The final source for a Twitter example using the Background Service Plugin (http://red-folder.blogspot.com/2012/09/phonegap-service-tutorial-part-1.html)
+
 
 ## Further Information ##
 
