@@ -1,0 +1,113 @@
+<html>
+	<head>
+		<title>Twitter Example</title>
+		
+		<script type="text/javascript" charset="utf-8" src="cordova-2.0.0.js"></script>
+		<script type="text/javascript" charset="utf-8" src="jquery-1.8.1.min.js"></script>
+		<script type="text/javascript" charset="utf-8" src="handlebars-1.0.0.beta.6.js" ></script>
+		
+		<script type="text/javascript" src="backgroundService-2.0.0.js"></script>
+		<script type="text/javascript" src="twitterService.js"></script>
+		
+        <script type="text/javascript" >
+        	var twitterService = cordova.require('cordova/plugin/twitterService');
+        	
+        	document.addEventListener('deviceready', function() {
+				getStatus();
+  			}, true);
+  			
+  			function getStatus() {
+ 				twitterService.getStatus(	function(r){ startService(r) },
+ 											function(e){ alert('An error has occurred in getStatus') });
+ 			};
+ 			
+ 			function startService(data) {
+ 				if (data.ServiceRunning)
+ 					enableTimer(data);
+ 				else
+					twitterService.startService(	function(r){ enableTimer(r) },
+ 													function(e){ alert('An error has occurred in startService') });
+ 			}
+
+ 			function enableTimer(data) {
+ 				if (data.TimerEnabled)
+ 					registerForBootStart(data);
+ 				else
+					twitterService.enableTimer(	60000,
+												function(r){ registerForBootStart(r) },
+ 												function(e){ alert('An error has occurred in enableTimer') });
+ 			}
+ 			
+ 			function registerForBootStart(data) {
+ 				if (data.RegisteredForBootStart)
+ 					alert('Service started, timer enabled and service registered for Boot start');
+ 				else
+					twitterService.registerForBootStart(	function(r){ alert('Service started, timer enabled and service registered for Boot start') },
+ 															function(e){ alert('An error has occurred in registerForBootStart') });
+ 			}
+
+  		</script>
+		
+		<script type="text/javascript">
+			$(document).ready(getTweets);
+			
+			function getTweets() {
+    			var url = "http://search.twitter.com/search.json?q=phonegap&rpp=3&page1";
+ 
+                $.getJSON(url, function(data) {
+	 				var tweets = $.map(data.results, function (tweet) {
+                            return {
+                                author: tweet.from_user,
+                                tweet: tweet.text,
+                                thumbnail: tweet.profile_image_url,
+                                url: 'http://twitter.com/' + tweet.from_user + '/status/' + tweet.id_str
+                            };
+                        });
+						
+					var template = Handlebars.compile($('#tweets-template').html());
+					var html = template(tweets);
+					$('ul.tweets').append(html);
+				});
+    			
+			}
+		</script>
+		
+		<style type="text/css">
+			ul 
+			{
+				list-style: none;
+			}
+			li
+			{
+				padding-bottom: 1em;
+			}
+			img
+			{
+				float: left;
+				padding-right: 1em;
+			}
+			a
+			{
+				text-decoration: none;
+				color: #333;
+			}
+		</style>
+	
+		
+	</head>
+	
+	<body>
+		<h1>Twitter Example</h1>
+		
+		<ul class='tweets'>
+        	<script id='tweets-template' type='test/x-handbars-template'>
+            	{{#each this}}
+            		<li>
+                		<img src="{{thumbnail}}" alt="{{author}}"/>
+                		<p><a href="{{url}}">{{tweet}}</a></p>
+            		</li>
+            	{{/each}}
+        	</script>
+    	</ul>	
+    </body>
+</html>
